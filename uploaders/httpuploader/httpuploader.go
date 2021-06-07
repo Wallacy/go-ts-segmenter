@@ -31,7 +31,7 @@ type HTTPUploader struct {
 func New(log *logrus.Logger, httpsInsecure bool, httpScheme string, httpHost string, maxHTTPRetries int, initialHTTPRetryDelayMs int) HTTPUploader {
 	if log == nil {
 		log = logrus.New()
-		log.SetLevel(logrus.DebugLevel)
+		log.SetLevel(logrus.ErrorLevel)
 	}
 
 	var tr = http.DefaultTransport

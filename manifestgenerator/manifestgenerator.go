@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/hls"
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/mediachunk"
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/tspacket"
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/httpuploader"
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/s3uploader"
+	"go-ts-segmenter/manifestgenerator/hls"
+	"go-ts-segmenter/manifestgenerator/mediachunk"
+	"go-ts-segmenter/manifestgenerator/tspacket"
+	"go-ts-segmenter/uploaders/httpuploader"
+	"go-ts-segmenter/uploaders/s3uploader"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -35,9 +36,6 @@ const (
 const (
 	//GhostPrefixDefault ghost chunk prefix
 	GhostPrefixDefault = ".growing_"
-
-	//ChunkFileNumberLength chunk filenumber length
-	ChunkFileNumberLength = 5
 
 	//ChunkFileExtensionDefault default chunk extension
 	ChunkFileExtensionDefault = ".ts"
@@ -82,6 +80,7 @@ type options struct {
 	manifestOutputType hls.OutputTypes
 	baseOutPath        string
 	chunkBaseFilename  string
+	fileNumberLength   int
 	targetSegmentDurS  float64
 	chunkInitType      ChunkInitTypes
 	autoPIDs           bool
@@ -140,6 +139,7 @@ func New(
 	baseOutPath string,
 	chunkBaseFilename string,
 	chunkListFilename string,
+	fileNumberLength int,
 	targetSegmentDurS float64,
 	chunkInitType ChunkInitTypes,
 	autoPIDs bool,
@@ -153,7 +153,7 @@ func New(
 ) ManifestGenerator {
 	if log == nil {
 		log = logrus.New()
-		log.SetLevel(logrus.DebugLevel)
+		log.SetLevel(logrus.ErrorLevel)
 	}
 
 	chunklistFileName := path.Join(baseOutPath, chunkListFilename)
@@ -165,6 +165,7 @@ func New(
 			manifestOutputType,
 			baseOutPath,
 			chunkBaseFilename,
+			fileNumberLength,
 			targetSegmentDurS,
 			chunkInitType,
 			autoPIDs,
@@ -494,7 +495,7 @@ func (mg *ManifestGenerator) createChunk(isInit bool) {
 			OutputType:         mg.options.chunkOutputType,
 			LHLS:               false,
 			EstimatedDurationS: -1,
-			FileNumberLength:   ChunkFileNumberLength,
+			FileNumberLength:   mg.options.fileNumberLength,
 			GhostPrefix:        GhostPrefixDefault,
 			FileExtension:      ChunkFileExtensionDefault,
 			BasePath:           mg.options.baseOutPath,
@@ -524,7 +525,7 @@ func (mg *ManifestGenerator) createChunk(isInit bool) {
 				OutputType:         mg.options.chunkOutputType,
 				LHLS:               false,
 				EstimatedDurationS: mg.options.targetSegmentDurS,
-				FileNumberLength:   ChunkFileNumberLength,
+				FileNumberLength:   mg.options.fileNumberLength,
 				GhostPrefix:        GhostPrefixDefault,
 				FileExtension:      ChunkFileExtensionDefault,
 				BasePath:           mg.options.baseOutPath,

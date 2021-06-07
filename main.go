@@ -5,11 +5,12 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator"
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/hls"
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/mediachunk"
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/httpuploader"
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/s3uploader"
+	"go-ts-segmenter/manifestgenerator"
+	"go-ts-segmenter/manifestgenerator/hls"
+	"go-ts-segmenter/manifestgenerator/mediachunk"
+	"go-ts-segmenter/uploaders/httpuploader"
+	"go-ts-segmenter/uploaders/s3uploader"
+
 	"github.com/sirupsen/logrus"
 
 	"bufio"
@@ -27,6 +28,7 @@ var (
 	baseOutPath             = flag.String("dstPath", "./results", "Output path")
 	chunkBaseFilename       = flag.String("chunksBaseFilename", "chunk_", "Chunks base filename")
 	chunkListFilename       = flag.String("chunklistFilename", "chunklist.m3u8", "Chunklist filename")
+	fileNumberLength        = flag.Int("maxChunks", 5, "Number of chunks inside of .m3u8")
 	targetSegmentDurS       = flag.Float64("targetDur", 4.0, "Target chunk duration in seconds")
 	liveWindowSize          = flag.Int("liveWindowSize", 3, "Live window size in chunks")
 	lhlsAdvancedChunks      = flag.Int("lhls", 0, "If > 0 activates LHLS, and it indicates the number of advanced chunks to create")
@@ -96,6 +98,7 @@ func main() {
 		*baseOutPath,
 		*chunkBaseFilename,
 		*chunkListFilename,
+		*fileNumberLength,
 		*targetSegmentDurS,
 		manifestgenerator.ChunkInitTypes(*chunkInitType),
 		*autoPID,
@@ -172,7 +175,7 @@ func isS3Out() bool {
 func configureLogger(verbose bool, logPath string) *logrus.Logger {
 	var log = logrus.New()
 	if verbose {
-		log.SetLevel(logrus.DebugLevel)
+		log.SetLevel(logrus.ErrorLevel)
 	}
 
 	formatter := new(logrus.JSONFormatter)

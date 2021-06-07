@@ -40,7 +40,7 @@ type AWSLocalCreds struct {
 func New(log *logrus.Logger, s3Bucket string, s3Region string, s3UploadTimeOutMs int, s3GrantReadToUploadedFiles bool, awsCreds AWSLocalCreds) S3Uploader {
 	if log == nil {
 		log = logrus.New()
-		log.SetLevel(logrus.DebugLevel)
+		log.SetLevel(logrus.ErrorLevel)
 	}
 
 	// All clients require a Session. The Session provides the client with

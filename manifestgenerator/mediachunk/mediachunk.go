@@ -12,8 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/httpuploader"
-	"github.com/jordicenzano/go-ts-segmenter/uploaders/s3uploader"
+	"go-ts-segmenter/uploaders/httpuploader"
+	"go-ts-segmenter/uploaders/s3uploader"
+
 	"github.com/sirupsen/logrus"
 )
 

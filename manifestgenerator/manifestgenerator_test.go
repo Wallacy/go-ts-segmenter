@@ -9,8 +9,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/hls"
-	"github.com/jordicenzano/go-ts-segmenter/manifestgenerator/mediachunk"
+	"go-ts-segmenter/manifestgenerator/hls"
+	"go-ts-segmenter/manifestgenerator/mediachunk"
 )
 
 func parseHexString(h string) []byte {
