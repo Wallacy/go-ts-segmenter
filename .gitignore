@@ -8,3 +8,4 @@ glide.lock
 vendor/
 /secrets/*
 !/secrets/*.example
+dist/
